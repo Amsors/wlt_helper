@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using NativeWifi;
@@ -12,14 +13,13 @@ namespace wlt_helper
     public class WltWebFunction:IDisposable
     {
         private readonly HttpClient _httpClient;
-        private bool _disposed = false; // 标记资源是否已被释放
+        private bool _disposed = false; // 资源是否已被释放
 
         public WltWebFunction()
         {
-            // 创建HttpClient实例，并设置默认超时时间为3秒
             _httpClient = new HttpClient()
             {
-                Timeout = TimeSpan.FromSeconds(3)
+                Timeout = TimeSpan.FromSeconds(3) // 设置默认超时时间为3秒
             };
         }
 
@@ -49,24 +49,29 @@ namespace wlt_helper
                 return false;
             }
         }
-        public async Task<string> PostFormAsync(string url, Dictionary<string, string> formData)
+        public async Task<string> PostFormAsync(string url, Dictionary<string, string> formData, string charSet = "utf-8")
         {
             try
             {
                 // 将字典数据转换为application/x-www-form-urlencoded格式
                 var formContent = new FormUrlEncodedContent(formData);
-
                 // 设置请求头
                 formContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
                 // 发送POST请求
                 HttpResponseMessage response = await _httpClient.PostAsync(url, formContent);
-
                 // 确保响应成功
                 response.EnsureSuccessStatusCode();
 
-                // 读取并返回响应内容
-                return await response.Content.ReadAsStringAsync();
+                var customEncoding = CodePagesEncodingProvider.Instance.GetEncoding(charSet);
+                byte[] responseBytes = await response.Content.ReadAsByteArrayAsync();
+                if(customEncoding == null)
+                {
+                    Debug.WriteLine($"{charSet} Encode is unavailable");
+                    return "N/A";
+                }
+                string responseString = customEncoding.GetString(responseBytes);
+
+                return responseString;
             }
             catch (TaskCanceledException)
             {
@@ -96,6 +101,44 @@ namespace wlt_helper
                 }
             }
             return string.Empty;
+        }
+
+        public async Task PostUserPwd(MainForm mainform)
+        {
+            string url = "http://wlt.ustc.edu.cn/cgi-bin/ip";
+            (string? user, string? pwd) = mainform.GetUserPwd();
+            if(user == null || pwd == null)
+            {
+                return;
+            }
+            var formData = new Dictionary<string, string>
+            {
+                { "name", user },
+                { "password", pwd },
+                {"cmd", "login" },
+                {"url", "URL" },
+                {"set", "%D2%BB%BC%FC%C9%CF%CD%F8" }
+            };
+
+            try
+            {
+                string response = await PostFormAsync(url, formData, "GB2312");
+                Debug.WriteLine($"POST请求响应：{response}");
+                if (response.Contains("网络设置成功"))
+                {
+                    mainform.OutputToStatusBox(" 成功");
+                }
+                else
+                {
+                    mainform.OutputToStatusBox(" 失败");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"POST请求失败：{ex.Message}");
+                mainform.OutputToStatusBox(" 失败");
+            }
         }
 
         public void Dispose()

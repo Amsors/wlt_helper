@@ -38,8 +38,9 @@
             lbl_SSID = new Label();
             txt_SSID = new TextBox();
             lbl_Title = new Label();
-            textBox1 = new TextBox();
+            txt_StatusBox = new TextBox();
             ckb_LaunchOnBoot = new CheckBox();
+            btn_Login = new Button();
             SuspendLayout();
             // 
             // txt_UserName
@@ -53,7 +54,7 @@
             // 
             // btn_Submit
             // 
-            btn_Submit.Location = new Point(528, 185);
+            btn_Submit.Location = new Point(538, 185);
             btn_Submit.Name = "btn_Submit";
             btn_Submit.Size = new Size(150, 30);
             btn_Submit.TabIndex = 1;
@@ -72,7 +73,7 @@
             // 
             // btn_TogglePassword
             // 
-            btn_TogglePassword.Location = new Point(528, 251);
+            btn_TogglePassword.Location = new Point(538, 251);
             btn_TogglePassword.Name = "btn_TogglePassword";
             btn_TogglePassword.Size = new Size(150, 30);
             btn_TogglePassword.TabIndex = 3;
@@ -100,9 +101,9 @@
             // 
             // btn_TestURL
             // 
-            btn_TestURL.Location = new Point(584, 365);
+            btn_TestURL.Location = new Point(588, 327);
             btn_TestURL.Name = "btn_TestURL";
-            btn_TestURL.Size = new Size(94, 29);
+            btn_TestURL.Size = new Size(100, 29);
             btn_TestURL.TabIndex = 6;
             btn_TestURL.Text = "button1";
             btn_TestURL.UseVisualStyleBackColor = true;
@@ -136,32 +137,44 @@
             lbl_Title.Text = "label1";
             lbl_Title.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // textBox1
+            // txt_StatusBox
             // 
-            textBox1.Location = new Point(89, 418);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.Size = new Size(691, 135);
-            textBox1.TabIndex = 10;
+            txt_StatusBox.Location = new Point(89, 422);
+            txt_StatusBox.Multiline = true;
+            txt_StatusBox.Name = "txt_StatusBox";
+            txt_StatusBox.ReadOnly = true;
+            txt_StatusBox.Size = new Size(691, 135);
+            txt_StatusBox.TabIndex = 10;
             // 
             // ckb_LaunchOnBoot
             // 
             ckb_LaunchOnBoot.AutoSize = true;
-            ckb_LaunchOnBoot.Location = new Point(569, 326);
+            ckb_LaunchOnBoot.Location = new Point(578, 295);
             ckb_LaunchOnBoot.Name = "ckb_LaunchOnBoot";
             ckb_LaunchOnBoot.Size = new Size(109, 24);
             ckb_LaunchOnBoot.TabIndex = 11;
             ckb_LaunchOnBoot.Text = "checkBox1";
             ckb_LaunchOnBoot.UseVisualStyleBackColor = true;
             // 
+            // btn_Login
+            // 
+            btn_Login.Location = new Point(588, 371);
+            btn_Login.Margin = new Padding(2, 2, 2, 2);
+            btn_Login.Name = "btn_Login";
+            btn_Login.Size = new Size(100, 29);
+            btn_Login.TabIndex = 12;
+            btn_Login.Text = "button1";
+            btn_Login.UseVisualStyleBackColor = true;
+            btn_Login.Click += btn_Login_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(868, 565);
+            Controls.Add(btn_Login);
             Controls.Add(ckb_LaunchOnBoot);
-            Controls.Add(textBox1);
+            Controls.Add(txt_StatusBox);
             Controls.Add(lbl_Title);
             Controls.Add(txt_SSID);
             Controls.Add(lbl_SSID);
@@ -194,7 +207,8 @@
         private Label lbl_SSID;
         private TextBox txt_SSID;
         private Label lbl_Title;
-        private TextBox textBox1;
+        private TextBox txt_StatusBox;
         private CheckBox ckb_LaunchOnBoot;
+        private Button btn_Login;
     }
 }

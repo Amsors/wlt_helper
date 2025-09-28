@@ -21,6 +21,7 @@ namespace wlt_helper
             lbl_SSID.Text = "当前WLAN的SSID";
             lbl_Title.Text = "网络通助手";
             ckb_LaunchOnBoot.Text = "开机自启动";
+            btn_Login.Text = "尝试登录";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -63,15 +64,13 @@ namespace wlt_helper
         {
             if (isPasswordVisible)
             {
-                // 隐藏密码
                 txt_Password.PasswordChar = '*';
                 btn_TogglePassword.Text = "显示密码";
                 isPasswordVisible = false;
             }
             else
             {
-                // 显示密码
-                txt_Password.PasswordChar = '\0'; // 设置为空字符
+                txt_Password.PasswordChar = '\0';
                 btn_TogglePassword.Text = "隐藏密码";
                 isPasswordVisible = true;
             }
@@ -91,35 +90,43 @@ namespace wlt_helper
         {
             using (var webFunction = new WltWebFunction())
             {
-                // 1. 测试网页访问
-                string testUrl = "https://httpbin.org/get";
+                string testUrl = "https://www.baidu.com";
                 bool isAccessible = await webFunction.TestWebsiteAccessAsync(testUrl);
-                Debug.WriteLine($"网站 {testUrl} 可访问性：{(isAccessible ? "可访问" : "不可访问")}");
-
-                // 2. 发送POST请求
-                string postUrl = "https://httpbin.org/post";
-                var formData = new Dictionary<string, string>
-            {
-                { "username", "testuser" },
-                { "password", "testpass" },
-                { "email", "test@example.com" }
-            };
-
-                try
-                {
-                    string response = await webFunction.PostFormAsync(postUrl, formData);
-                    Debug.WriteLine($"POST请求响应：{response}");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"POST请求失败：{ex.Message}");
-                }
+                string content = $"网站 {testUrl} 可访问性：{(isAccessible ? "可访问" : "不可访问")}";
+                OutputToStatusBox(content);
             }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public void OutputToStatusBox(string str, bool newline = true)
+        {
+            if (newline)
+            {
+                txt_StatusBox.AppendText(str+Environment.NewLine);
+            }
+            else
+            {
+                txt_StatusBox.AppendText(str);
+            }
+            txt_StatusBox.ScrollToCaret();
+        }
+
+        public (string? firstName, string? lastName) GetUserPwd()
+        {
+            return (txt_UserName.Text, txt_Password.Text);
+        }
+
+        private async void btn_Login_Click(object sender, EventArgs e)
+        {
+            using (var webFunction = new WltWebFunction())
+            {
+                OutputToStatusBox("尝试登录到网络通", false);
+                await webFunction.PostUserPwd(this);
+            }
         }
     }
 }

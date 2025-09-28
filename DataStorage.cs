@@ -40,7 +40,6 @@ namespace wlt_helper
                 byte[] encryptedData = File.ReadAllBytes(filePath);
                 byte[] decryptedData = ProtectedData.Unprotect(encryptedData, s_additionalEntropy, DataProtectionScope.CurrentUser);
 
-                // 3. 还原为字符串并填充到控件
                 string credentials = Encoding.UTF8.GetString(decryptedData);
                 return credentials;
             }
