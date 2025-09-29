@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace wlt_helper
+namespace wlt_helper.Services
 {
     internal class DataStorage
     {

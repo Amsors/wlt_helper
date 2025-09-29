@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IWshRuntimeLibrary;
 
-namespace wlt_helper
+namespace wlt_helper.Services
 {
     internal class AppSettings
     {

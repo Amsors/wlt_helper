@@ -4,6 +4,7 @@ using System.Net.NetworkInformation;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Windows.Forms;
 using System.Drawing;
+using wlt_helper.Services;
 
 namespace wlt_helper
 {

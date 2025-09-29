@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NativeWifi;
 
-namespace wlt_helper
+namespace wlt_helper.Services
 {
     public class WltWebFunction:IDisposable
     {
