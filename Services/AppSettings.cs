@@ -83,6 +83,30 @@ namespace wlt_helper.Services
 
     internal static class Config
     {
-        internal static bool TrayStartup;
+        private static bool _hideOnLaunch = false;
+        public static bool HideOnLaunch
+        {
+            get
+            {
+                return _hideOnLaunch;
+            }
+            set
+            {
+                _hideOnLaunch = value;
+            }
+        }
+        private static bool _launchOnBoot = false;
+        public static bool LaunchOnBoot
+        {
+            get
+            {
+                return _launchOnBoot;
+            }
+            set
+            {
+
+                _launchOnBoot = value;
+            }
+        }
     }
 }

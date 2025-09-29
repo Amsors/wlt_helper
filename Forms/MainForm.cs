@@ -11,10 +11,12 @@ namespace wlt_helper
     public partial class MainForm : Form
     {
         private bool isPasswordVisible = false;
+        private bool isMainFormVisible = true;
         public MainForm()
         {
             InitializeComponent();
             MainFormInitialize();
+            NotifyIconInitialize();
             AppSettings.ReadConfigFile();
         }
 
@@ -34,6 +36,18 @@ namespace wlt_helper
             lbl_Title.Text = "网络通助手";
             ckb_LaunchOnBoot.Text = "开机自启动";
             btn_Login.Text = "尝试登录";
+            btn_ExitApp.Text = "退出程序";
+
+            this.FormClosing += MainForm_FormClosing;
+        }
+
+        private void NotifyIconInitialize()
+        {
+            byte[] iconBytes = AppSettings.GetIconBytes();
+            Icon myIcon = AppSettings.BytesToIcon(iconBytes);
+            this.notifyIcon.Icon = myIcon;
+            notifyIcon.Text = "wlt_helper";
+            notifyIcon.Visible = true;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -54,6 +68,24 @@ namespace wlt_helper
             {
                 txt_SSID.Text = ssid;
             }
+        }
+
+        private void MainForm_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                this.isMainFormVisible = false;
+                this.Hide();
+            }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.isMainFormVisible) return;
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
         }
 
         private void btn_Submit_Click(object sender, EventArgs e)
@@ -146,24 +178,27 @@ namespace wlt_helper
             if (ckb_LaunchOnBoot.Checked)
             {
                 OutputToStatusBox("设置开机自启动 ", false);
-                AppSettings.autostartEnable = true;
                 if (AppSettings.SetAutoStart())
                 {
                     OutputToStatusBox("成功");
+                    AppSettings.autostartEnable = true;
                 }
                 else
                 {
                     OutputToStatusBox("失败");
+                    OutputToStatusBox($"请检查" +
+                        @"C:\Users\[你的用户名称]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"+
+                        "并手动删除APP快捷方式");
                     AppSettings.autostartEnable = false;
                 }
             }
             else
             {
                 OutputToStatusBox("取消开机自启动 ", false);
-                AppSettings.autostartEnable = false;
                 if (AppSettings.SetAutoStart())
                 {
                     OutputToStatusBox("成功");
+                    AppSettings.autostartEnable = false;
                 }
                 else
                 {
@@ -171,6 +206,12 @@ namespace wlt_helper
                     AppSettings.autostartEnable = true;
                 }
             }
+        }
+
+        private void btn_ExitApp_Click(object sender, EventArgs e)
+        {
+            this.notifyIcon.Dispose();
+            Application.Exit();
         }
     }
 }

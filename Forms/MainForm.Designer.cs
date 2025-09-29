@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             txt_UserName = new TextBox();
             btn_Submit = new Button();
             txt_Password = new TextBox();
@@ -41,22 +42,26 @@
             txt_StatusBox = new TextBox();
             ckb_LaunchOnBoot = new CheckBox();
             btn_Login = new Button();
+            notifyIcon = new NotifyIcon(components);
+            btn_ExitApp = new Button();
             SuspendLayout();
             // 
             // txt_UserName
             // 
-            txt_UserName.Location = new Point(190, 187);
+            txt_UserName.Location = new Point(274, 262);
+            txt_UserName.Margin = new Padding(4);
             txt_UserName.MaxLength = 128;
             txt_UserName.Name = "txt_UserName";
-            txt_UserName.Size = new Size(300, 27);
+            txt_UserName.Size = new Size(432, 34);
             txt_UserName.TabIndex = 0;
             txt_UserName.TextChanged += txt_UserName_TextChanged;
             // 
             // btn_Submit
             // 
-            btn_Submit.Location = new Point(538, 185);
+            btn_Submit.Location = new Point(777, 259);
+            btn_Submit.Margin = new Padding(4);
             btn_Submit.Name = "btn_Submit";
-            btn_Submit.Size = new Size(150, 30);
+            btn_Submit.Size = new Size(217, 42);
             btn_Submit.TabIndex = 1;
             btn_Submit.Text = "button1";
             btn_Submit.UseVisualStyleBackColor = true;
@@ -64,18 +69,20 @@
             // 
             // txt_Password
             // 
-            txt_Password.Location = new Point(190, 253);
+            txt_Password.Location = new Point(274, 354);
+            txt_Password.Margin = new Padding(4);
             txt_Password.MaxLength = 128;
             txt_Password.Name = "txt_Password";
-            txt_Password.Size = new Size(300, 27);
+            txt_Password.Size = new Size(432, 34);
             txt_Password.TabIndex = 2;
             txt_Password.TextChanged += txt_Password_TextChanged;
             // 
             // btn_TogglePassword
             // 
-            btn_TogglePassword.Location = new Point(538, 251);
+            btn_TogglePassword.Location = new Point(777, 351);
+            btn_TogglePassword.Margin = new Padding(4);
             btn_TogglePassword.Name = "btn_TogglePassword";
-            btn_TogglePassword.Size = new Size(150, 30);
+            btn_TogglePassword.Size = new Size(217, 42);
             btn_TogglePassword.TabIndex = 3;
             btn_TogglePassword.Text = "button2";
             btn_TogglePassword.UseVisualStyleBackColor = true;
@@ -84,26 +91,29 @@
             // lbl_UserName
             // 
             lbl_UserName.AutoSize = true;
-            lbl_UserName.Location = new Point(190, 164);
+            lbl_UserName.Location = new Point(274, 230);
+            lbl_UserName.Margin = new Padding(4, 0, 4, 0);
             lbl_UserName.Name = "lbl_UserName";
-            lbl_UserName.Size = new Size(53, 20);
+            lbl_UserName.Size = new Size(73, 28);
             lbl_UserName.TabIndex = 4;
             lbl_UserName.Text = "label1";
             // 
             // lbl_Password
             // 
             lbl_Password.AutoSize = true;
-            lbl_Password.Location = new Point(190, 230);
+            lbl_Password.Location = new Point(274, 322);
+            lbl_Password.Margin = new Padding(4, 0, 4, 0);
             lbl_Password.Name = "lbl_Password";
-            lbl_Password.Size = new Size(53, 20);
+            lbl_Password.Size = new Size(73, 28);
             lbl_Password.TabIndex = 5;
             lbl_Password.Text = "label2";
             // 
             // btn_TestURL
             // 
-            btn_TestURL.Location = new Point(588, 327);
+            btn_TestURL.Location = new Point(677, 458);
+            btn_TestURL.Margin = new Padding(4);
             btn_TestURL.Name = "btn_TestURL";
-            btn_TestURL.Size = new Size(100, 29);
+            btn_TestURL.Size = new Size(144, 41);
             btn_TestURL.TabIndex = 6;
             btn_TestURL.Text = "button1";
             btn_TestURL.UseVisualStyleBackColor = true;
@@ -112,46 +122,51 @@
             // lbl_SSID
             // 
             lbl_SSID.AutoSize = true;
-            lbl_SSID.Location = new Point(190, 327);
+            lbl_SSID.Location = new Point(274, 458);
+            lbl_SSID.Margin = new Padding(4, 0, 4, 0);
             lbl_SSID.Name = "lbl_SSID";
-            lbl_SSID.Size = new Size(53, 20);
+            lbl_SSID.Size = new Size(73, 28);
             lbl_SSID.TabIndex = 7;
             lbl_SSID.Text = "label1";
             // 
             // txt_SSID
             // 
-            txt_SSID.Location = new Point(190, 350);
+            txt_SSID.Location = new Point(274, 490);
+            txt_SSID.Margin = new Padding(4);
             txt_SSID.Name = "txt_SSID";
             txt_SSID.ReadOnly = true;
-            txt_SSID.Size = new Size(167, 27);
+            txt_SSID.Size = new Size(239, 34);
             txt_SSID.TabIndex = 8;
             txt_SSID.TextChanged += textBox1_TextChanged;
             // 
             // lbl_Title
             // 
             lbl_Title.Font = new Font("楷体", 50F);
-            lbl_Title.Location = new Point(133, 33);
+            lbl_Title.Location = new Point(192, 46);
+            lbl_Title.Margin = new Padding(4, 0, 4, 0);
             lbl_Title.Name = "lbl_Title";
-            lbl_Title.Size = new Size(607, 93);
+            lbl_Title.Size = new Size(877, 130);
             lbl_Title.TabIndex = 9;
             lbl_Title.Text = "label1";
             lbl_Title.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // txt_StatusBox
             // 
-            txt_StatusBox.Location = new Point(89, 422);
+            txt_StatusBox.Location = new Point(129, 591);
+            txt_StatusBox.Margin = new Padding(4);
             txt_StatusBox.Multiline = true;
             txt_StatusBox.Name = "txt_StatusBox";
             txt_StatusBox.ReadOnly = true;
-            txt_StatusBox.Size = new Size(691, 135);
+            txt_StatusBox.Size = new Size(996, 187);
             txt_StatusBox.TabIndex = 10;
             // 
             // ckb_LaunchOnBoot
             // 
             ckb_LaunchOnBoot.AutoSize = true;
-            ckb_LaunchOnBoot.Location = new Point(578, 295);
+            ckb_LaunchOnBoot.Location = new Point(835, 413);
+            ckb_LaunchOnBoot.Margin = new Padding(4);
             ckb_LaunchOnBoot.Name = "ckb_LaunchOnBoot";
-            ckb_LaunchOnBoot.Size = new Size(109, 24);
+            ckb_LaunchOnBoot.Size = new Size(145, 32);
             ckb_LaunchOnBoot.TabIndex = 11;
             ckb_LaunchOnBoot.Text = "checkBox1";
             ckb_LaunchOnBoot.UseVisualStyleBackColor = true;
@@ -159,20 +174,36 @@
             // 
             // btn_Login
             // 
-            btn_Login.Location = new Point(588, 371);
-            btn_Login.Margin = new Padding(2);
+            btn_Login.Location = new Point(677, 532);
             btn_Login.Name = "btn_Login";
-            btn_Login.Size = new Size(100, 29);
+            btn_Login.Size = new Size(144, 41);
             btn_Login.TabIndex = 12;
             btn_Login.Text = "button1";
             btn_Login.UseVisualStyleBackColor = true;
             btn_Login.Click += btn_Login_Click;
             // 
+            // notifyIcon
+            // 
+            notifyIcon.Text = "notifyIcon1";
+            notifyIcon.Visible = true;
+            notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
+            // 
+            // btn_ExitApp
+            // 
+            btn_ExitApp.Location = new Point(850, 458);
+            btn_ExitApp.Name = "btn_ExitApp";
+            btn_ExitApp.Size = new Size(144, 41);
+            btn_ExitApp.TabIndex = 13;
+            btn_ExitApp.Text = "button1";
+            btn_ExitApp.UseVisualStyleBackColor = true;
+            btn_ExitApp.Click += btn_ExitApp_Click;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(9F, 20F);
+            AutoScaleDimensions = new SizeF(13F, 28F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(868, 565);
+            ClientSize = new Size(1254, 791);
+            Controls.Add(btn_ExitApp);
             Controls.Add(btn_Login);
             Controls.Add(ckb_LaunchOnBoot);
             Controls.Add(txt_StatusBox);
@@ -187,6 +218,7 @@
             Controls.Add(btn_Submit);
             Controls.Add(txt_UserName);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            Margin = new Padding(4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "MainForm";
@@ -211,5 +243,7 @@
         private TextBox txt_StatusBox;
         private CheckBox ckb_LaunchOnBoot;
         private Button btn_Login;
+        private NotifyIcon notifyIcon;
+        private Button btn_ExitApp;
     }
 }
