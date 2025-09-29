@@ -72,6 +72,7 @@ namespace wlt_helper
             btn_Login.Text = "³¢ÊÔµÇÂ¼";
             btn_ExitApp.Text = "ÍË³ö³ÌÐò";
             ckb_HideOnLaunch.Text = "Æô¶¯×Ô¶¯ÍÐÅÌ";
+            txt_SSID.Text = "N/A"; //TODO ´ýÉ¾³ý
 
             this.FormClosing += MainForm_FormClosing;
             //this.Shown += MainForm_Hide;
@@ -111,11 +112,11 @@ namespace wlt_helper
                 }
             }
 
-            string ssid = WltWebFunction.GetCurrentConnection();
-            if (ssid != null)
-            {
-                txt_SSID.Text = ssid;
-            }
+            //string ssid = WltWebFunction.GetCurrentConnection();
+            //if (ssid != null)
+            //{
+            //    txt_SSID.Text = ssid;
+            //}
         }
 
         private void MainForm_FormClosing(object? sender, FormClosingEventArgs e)

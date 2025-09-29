@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using NativeWifi;
@@ -86,29 +87,46 @@ namespace wlt_helper.Services
             }
         }
 
-        public static string GetCurrentConnection()
+        //public static string GetCurrentConnection()
+        //{
+        //    WlanClient client = new WlanClient();
+        //    try{
+        //        foreach (WlanClient.WlanInterface wlanIface in client.Interfaces)
+        //        {
+        //            if (wlanIface.InterfaceState == Wlan.WlanInterfaceState.Connected &&
+        //                wlanIface.CurrentConnection.isState == Wlan.WlanInterfaceState.Connected)
+        //            {
+        //                return wlanIface.CurrentConnection.profileName;
+        //            }
+        //        }
+        //        return string.Empty;
+        //    }
+        //    finally
+        //    {
+        //        //client.Dispose(); 
+        //    }
+        //}
+
+        public static async Task<bool> PingWebsiteAsync(string url)
         {
-            WlanClient client = new WlanClient();
-            try{
-                foreach (WlanClient.WlanInterface wlanIface in client.Interfaces)
-                {
-                    if (wlanIface.InterfaceState == Wlan.WlanInterfaceState.Connected &&
-                        wlanIface.CurrentConnection.isState == Wlan.WlanInterfaceState.Connected)
-                    {
-                        return wlanIface.CurrentConnection.profileName;
-                    }
-                }
-                return string.Empty;
-            }
-            finally
+            try
             {
-                //client.Dispose(); 
+                using (Ping ping = new())
+                {
+                    PingReply reply = await ping.SendPingAsync(url, 1000);
+                    return reply.Status == IPStatus.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ping操作发生异常: {ex.Message}");
+                return false;
             }
         }
 
         public async Task LoginToWlt()
         {
-            string url = AppConfig.url_Wlt;
+            string url = AppConfig.url_WltLogin;
             (string? user, string? pwd) = DataStorage.GetUserPwd();
             if(user == null || pwd == null)
             {

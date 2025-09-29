@@ -133,7 +133,8 @@ namespace wlt_helper.Services
         public static readonly string path_Config = @"wlt_helper_config.json";
         public static readonly string url_MSConnectTest = @"http://www.msftconnecttest.com/connecttest.txt";
         public static readonly string url_BaiduConnectTest = @"http://baidu.com";
-        public static readonly string url_Wlt = @"http://wlt.ustc.edu.cn/cgi-bin/ip";
+        public static readonly string url_WltLogin = @"http://wlt.ustc.edu.cn/cgi-bin/ip";
+        public static readonly string url_WltHost = @"wlt.ustc.edu.cn";
         public static readonly string SSID_Target = "ustcnet";
         public static readonly int time_ScanNetworkAvaidability = 3000;
     }

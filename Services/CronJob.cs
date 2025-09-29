@@ -19,10 +19,16 @@ namespace wlt_helper.Services
     {
         public  async void ConnectToWlt(object? state)
         {
-            string ssid = WltWebFunction.GetCurrentConnection();
-            if (WltWebFunction.NeedToLogin(ssid) == false)
+            //string ssid = WltWebFunction.GetCurrentConnection();
+            //if (WltWebFunction.NeedToLogin(ssid) == false)
+            //{
+            //    Debug.WriteLine("无需登录，SSID不匹配");
+            //    return;
+            //}
+            bool pingAvailable = await WltWebFunction.PingWebsiteAsync(AppConfig.url_WltHost);
+            if (pingAvailable == false)
             {
-                Debug.WriteLine("无需登录，SSID不匹配");
+                Debug.WriteLine("非校园网");
                 return;
             }
             bool isAccessible;
