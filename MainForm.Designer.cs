@@ -155,11 +155,12 @@
             ckb_LaunchOnBoot.TabIndex = 11;
             ckb_LaunchOnBoot.Text = "checkBox1";
             ckb_LaunchOnBoot.UseVisualStyleBackColor = true;
+            ckb_LaunchOnBoot.CheckedChanged += ckb_LaunchOnBoot_CheckedChanged;
             // 
             // btn_Login
             // 
             btn_Login.Location = new Point(588, 371);
-            btn_Login.Margin = new Padding(2, 2, 2, 2);
+            btn_Login.Margin = new Padding(2);
             btn_Login.Name = "btn_Login";
             btn_Login.Size = new Size(100, 29);
             btn_Login.TabIndex = 12;
@@ -190,7 +191,7 @@
             MinimizeBox = false;
             Name = "MainForm";
             Text = "Form1";
-            Load += Form1_Load;
+            Load += MainForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

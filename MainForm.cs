@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace wlt_helper
 {
@@ -11,6 +13,15 @@ namespace wlt_helper
         public MainForm()
         {
             InitializeComponent();
+            MainFormInitialize();
+            AppSettings.ReadConfigFile();
+        }
+
+        private void MainFormInitialize()
+        {
+            byte[] iconBytes = AppSettings.GetIconBytes();
+            Icon myIcon = AppSettings.BytesToIcon(iconBytes);
+            this.Icon = myIcon;
             this.Text = "wlt_helper";
             btn_Submit.Text = "确认";
             btn_TogglePassword.Text = "显示密码";
@@ -24,7 +35,7 @@ namespace wlt_helper
             btn_Login.Text = "尝试登录";
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             string? user_pwd = DataStorage.LoadSavedCredentials();
             if (user_pwd != null)
@@ -106,7 +117,7 @@ namespace wlt_helper
         {
             if (newline)
             {
-                txt_StatusBox.AppendText(str+Environment.NewLine);
+                txt_StatusBox.AppendText(str + Environment.NewLine);
             }
             else
             {
@@ -126,6 +137,38 @@ namespace wlt_helper
             {
                 OutputToStatusBox("尝试登录到网络通", false);
                 await webFunction.PostUserPwd(this);
+            }
+        }
+
+        private void ckb_LaunchOnBoot_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckb_LaunchOnBoot.Checked)
+            {
+                OutputToStatusBox("设置开机自启动 ", false);
+                AppSettings.autostartEnable = true;
+                if (AppSettings.SetAutoStart())
+                {
+                    OutputToStatusBox("成功");
+                }
+                else
+                {
+                    OutputToStatusBox("失败");
+                    AppSettings.autostartEnable = false;
+                }
+            }
+            else
+            {
+                OutputToStatusBox("取消开机自启动 ", false);
+                AppSettings.autostartEnable = false;
+                if (AppSettings.SetAutoStart())
+                {
+                    OutputToStatusBox("成功");
+                }
+                else
+                {
+                    OutputToStatusBox("失败");
+                    AppSettings.autostartEnable = true;
+                }
             }
         }
     }
