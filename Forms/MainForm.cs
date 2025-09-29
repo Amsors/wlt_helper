@@ -5,6 +5,10 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Windows.Forms;
 using System.Drawing;
 using wlt_helper.Services;
+using System.Text.Json;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace wlt_helper
 {
@@ -12,12 +16,42 @@ namespace wlt_helper
     {
         private bool isPasswordVisible = false;
         private bool isMainFormVisible = true;
+
         public MainForm()
         {
             InitializeComponent();
+            ConfigInitialize();
             MainFormInitialize();
             NotifyIconInitialize();
-            AppSettings.ReadConfigFile();
+            LaunchCronJobs();
+        }
+
+        private void ConfigInitialize()
+        {
+            if (AppSettings.ExistConfigFile() == false)
+            {
+                UserConfig.LaunchOnBoot = false;
+                UserConfig.HideOnLaunch = false;
+
+                AppSettings.SetConfigFile();
+            }
+            else
+            {
+                string conf = AppSettings.ReadConfigFile();
+                using JsonDocument document = JsonDocument.Parse(conf);
+                JsonElement root = document.RootElement;
+
+                bool launchOnBoot = root.GetProperty("_launchOnBoot").GetBoolean();
+                bool hideOnLaunch = root.GetProperty("_hideOnLaunch").GetBoolean();
+
+                UserConfig.LaunchOnBoot = launchOnBoot;
+                UserConfig.HideOnLaunch = hideOnLaunch;
+
+                ckb_LaunchOnBoot.Checked = launchOnBoot;
+                AppSettings.SetAutoStart();
+
+                ckb_HideOnLaunch.Checked = hideOnLaunch;
+            }
         }
 
         private void MainFormInitialize()
@@ -37,8 +71,10 @@ namespace wlt_helper
             ckb_LaunchOnBoot.Text = "开机自启动";
             btn_Login.Text = "尝试登录";
             btn_ExitApp.Text = "退出程序";
+            ckb_HideOnLaunch.Text = "启动自动托盘";
 
             this.FormClosing += MainForm_FormClosing;
+            //this.Shown += MainForm_Hide;
         }
 
         private void NotifyIconInitialize()
@@ -50,8 +86,20 @@ namespace wlt_helper
             notifyIcon.Visible = true;
         }
 
+        private void LaunchCronJobs()
+        {
+            CronJob job1 = new();
+            TimerTask Task1 = new TimerTask(job1.ConnectToWlt, AppConfig.time_ScanNetworkAvaidability);
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
+            if (UserConfig.HideOnLaunch)
+            {
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+                this.isMainFormVisible = false;
+            }
             string? user_pwd = DataStorage.LoadSavedCredentials();
             if (user_pwd != null)
             {
@@ -85,6 +133,7 @@ namespace wlt_helper
             if (this.isMainFormVisible) return;
             this.Show();
             this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
             this.Activate();
         }
 
@@ -159,51 +208,50 @@ namespace wlt_helper
             txt_StatusBox.ScrollToCaret();
         }
 
-        public (string? firstName, string? lastName) GetUserPwd()
-        {
-            return (txt_UserName.Text, txt_Password.Text);
-        }
+        //public (string? firstName, string? lastName) GetUserPwd()
+        //{
+        //    return (txt_UserName.Text, txt_Password.Text);
+        //}
 
         private async void btn_Login_Click(object sender, EventArgs e)
         {
             using (var webFunction = new WltWebFunction())
             {
                 OutputToStatusBox("尝试登录到网络通", false);
-                await webFunction.PostUserPwd(this);
+                await webFunction.LoginToWlt();
             }
         }
 
         private void ckb_LaunchOnBoot_CheckedChanged(object sender, EventArgs e)
         {
+            Debug.WriteLine($"now is {ckb_LaunchOnBoot.Checked}");
+            Debug.WriteLine("正在更改开机自启动");
+            UserConfig.LaunchOnBoot = ckb_LaunchOnBoot.Checked;
             if (ckb_LaunchOnBoot.Checked)
             {
-                OutputToStatusBox("设置开机自启动 ", false);
+                UserConfig.LaunchOnBoot = true;
                 if (AppSettings.SetAutoStart())
                 {
-                    OutputToStatusBox("成功");
-                    AppSettings.autostartEnable = true;
+                    Debug.WriteLine("成功");
                 }
                 else
                 {
-                    OutputToStatusBox("失败");
-                    OutputToStatusBox($"请检查" +
-                        @"C:\Users\[你的用户名称]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"+
+                    Debug.WriteLine("失败");
+                    Debug.WriteLine($"请检查" +
+                        @"C:\Users\[你的用户名称]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" +
                         "并手动删除APP快捷方式");
-                    AppSettings.autostartEnable = false;
                 }
             }
             else
             {
-                OutputToStatusBox("取消开机自启动 ", false);
+                UserConfig.HideOnLaunch = false;
                 if (AppSettings.SetAutoStart())
                 {
-                    OutputToStatusBox("成功");
-                    AppSettings.autostartEnable = false;
+                    Debug.WriteLine("成功");
                 }
                 else
                 {
-                    OutputToStatusBox("失败");
-                    AppSettings.autostartEnable = true;
+                    Debug.WriteLine("失败");
                 }
             }
         }
@@ -212,6 +260,18 @@ namespace wlt_helper
         {
             this.notifyIcon.Dispose();
             Application.Exit();
+        }
+
+        private void ckb_HideOnLaunch_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckb_HideOnLaunch.Checked)
+            {
+                UserConfig.HideOnLaunch = true;
+            }
+            else
+            {
+                UserConfig.HideOnLaunch = false;
+            }
         }
     }
 }

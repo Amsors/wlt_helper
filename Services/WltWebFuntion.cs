@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using NativeWifi;
@@ -12,6 +9,8 @@ namespace wlt_helper.Services
 {
     public class WltWebFunction:IDisposable
     {
+        public static bool isLogined = false;
+
         private readonly HttpClient _httpClient;
         private bool _disposed = false; // 资源是否已被释放
 
@@ -90,23 +89,27 @@ namespace wlt_helper.Services
         public static string GetCurrentConnection()
         {
             WlanClient client = new WlanClient();
-            foreach (WlanClient.WlanInterface wlanIface in client.Interfaces)
-            {
-                // 检查接口是否处于已连接状态
-                if (wlanIface.InterfaceState == Wlan.WlanInterfaceState.Connected &&
-                    wlanIface.CurrentConnection.isState == Wlan.WlanInterfaceState.Connected)
+            try{
+                foreach (WlanClient.WlanInterface wlanIface in client.Interfaces)
                 {
-                    // 返回当前连接的配置文件名称，通常就是SSID
-                    return wlanIface.CurrentConnection.profileName;
+                    if (wlanIface.InterfaceState == Wlan.WlanInterfaceState.Connected &&
+                        wlanIface.CurrentConnection.isState == Wlan.WlanInterfaceState.Connected)
+                    {
+                        return wlanIface.CurrentConnection.profileName;
+                    }
                 }
+                return string.Empty;
             }
-            return string.Empty;
+            finally
+            {
+                //client.Dispose(); 
+            }
         }
 
-        public async Task PostUserPwd(MainForm mainform)
+        public async Task LoginToWlt()
         {
-            string url = "http://wlt.ustc.edu.cn/cgi-bin/ip";
-            (string? user, string? pwd) = mainform.GetUserPwd();
+            string url = AppConfig.url_Wlt;
+            (string? user, string? pwd) = DataStorage.GetUserPwd();
             if(user == null || pwd == null)
             {
                 return;
@@ -126,19 +129,28 @@ namespace wlt_helper.Services
                 Debug.WriteLine($"POST请求响应：{response}");
                 if (response.Contains("网络设置成功"))
                 {
-                    mainform.OutputToStatusBox(" 成功");
+                    Debug.WriteLine("登录成功");
                 }
                 else
                 {
-                    mainform.OutputToStatusBox(" 失败");
+                    //mainform.OutputToStatusBox(" 失败");
                 }
 
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"POST请求失败：{ex.Message}");
-                mainform.OutputToStatusBox(" 失败");
+                Debug.WriteLine("登录失败");
             }
+        }
+
+        public static bool NeedToLogin(string ssid)
+        {
+            if (ssid == AppConfig.SSID_Target)
+            {
+                return true;
+            }
+            return false;
         }
 
         public void Dispose()

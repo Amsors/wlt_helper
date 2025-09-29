@@ -54,5 +54,19 @@ namespace wlt_helper.Services
             }
             return null;
         }
+
+        public static (string user, string pwd) GetUserPwd()
+        {
+            string? user_pwd = LoadSavedCredentials();
+            if (user_pwd != null)
+            {
+                string[] parts = user_pwd.Split('|');
+                if (parts.Length == 2)
+                {
+                    return (parts[0], parts[1]);
+                }
+            }
+            return ("NA", "NA");
+        }
     }
 }
